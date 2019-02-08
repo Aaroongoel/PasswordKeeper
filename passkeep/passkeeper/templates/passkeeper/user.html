@@ -1,0 +1,11 @@
+{%extends "passkeeper/base.html"%}
+{%block content%}
+<form action="postsign" method="POST">
+    {% csrf_token%}
+    Email :
+    <input type="Email" name="email">
+    Phone Number:
+    <input type="number" name="phone">
+    <input type="submit" name="submit" value="Sign In">
+</form>
+{%endblock content%}
