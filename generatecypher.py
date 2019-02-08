@@ -1,46 +1,6 @@
-# To implement Vigenere Cipher 
-# This function generates the key in a cyclic manner until 
-#it's length isn't equal to the length of original text 
-def generateKey(string, key): 
-	key = list(key) 
-	if len(string) == len(key): 
-		return(key) 
-	else: 
-		for i in range(len(string) - len(key)): 
-			key.append(key[i % len(key)]) # return a keyvalue for the keyword entered.
-	return("" . join(key)) 
-	
-# This function returns the 
-# encrypted text generated 
-# with the help of the key 
-def cipherText(string, key): 
-	cipher_text = [] 
-	for i in range(len(string)): 
-		x = (ord(string[i]) + ord(key[i])) % 26 # gives a ascii code to the key.
-		x = x + ord('A') 
-		cipher_text.append(chr(x)) 
-	return("" . join(cipher_text)) 
-	
-# This function decrypts the 
-# encrypted text and returns 
-# the original text 
-def originalText(cipher_text, key):  # decrypts the cipher
-	orig_text = [] 
-	for i in range(len(cipher_text)): 
-		x = (ord(cipher_text[i]) - ord(key[i]) + 26) % 26
-		x= x + ord('A') 
-		orig_text.append(chr(x)) 
-	return("" . join(orig_text)) 
-	
-#if __name__ == "__main__":
-def callvigenere(string , keyword): 
-	key = generateKey(string, keyword) 
-	cipher_text = cipherText(string,key) 
-	print "Ciphertext after Vigenere is  :"+ cipher_text 
-	return cipher_text , key
-	#print("Original/Decrypted Text :", originalText(cipher_text, key)) 
+from Crypto.Cipher import AES
 
-# to Encrypt String using  Caesar Cipher
+
 def ceasorencrypt(text,s): 
 	result = "" 
 	l = len(text) 
@@ -49,24 +9,12 @@ def ceasorencrypt(text,s):
 		if char == ' ':
 			result = result + char
 		# To Encrypt uppercase characters 
-		elif (char.isupper()): 
-			result = result + chr((ord(char) + s-65) % 26 + 65) 
-		# To Encrypt lowercase characters 
-		else: 
-			result = result  + chr((ord(char) + s - 97) % 26 + 97) 
+		else  : 
+			result = result + chr((ord(char) + s)) 
+		 
 
 	return result 
-# def decryptceasor(ciphertext, n):
-# #Decrypt the string and return the plaintext
-#     result = ''
-#     for l in ciphertext:
-#         try:
-#             i = (key.index(l) - n) % 26
-#             result =result+ key[i]
-#         except ValueError:
-#             result = result+ l
 
-#     return result
 def decryptceasor(text,s): 
 	result = "" 
 	l = len(text) 
@@ -75,30 +23,54 @@ def decryptceasor(text,s):
 		if char == ' ':
 			result = result + char
 		# To Encrypt uppercase characters 
-		elif (char.isupper()): 
-			result = result + chr((ord(char) - s-65) % 26 + 65) 
-		# To Encrypt lowercase characters 
-		else: 
-			result = result  + chr((ord(char) - s - 97) % 26 + 97) 
+		else:
+			result = result + chr((ord(char) - s)) 
+		# To Encrypt lowercase characters  
 
 	return result 
+
 
 #check the above function 
 
 #decryptedceasor = decrypt(encryptedceasor, s)
+def encryptaes(text):
+	message = text
+	obj = AES.new('This is a key123', AES.MODE_CBC, 'This is an IV456')
+	ciphertext = obj.encrypt(message)
+	print ("encrypted message using aes " ,ciphertext)
+	return ciphertext
+
+def decryptaes(text ):
+	message = text
+	obj2 = AES.new('This is a key123', AES.MODE_CBC, 'This is an IV456')
+	original = obj2.decrypt(message)
+	print ("decrypted after AES is ", original)
+	return original
+	#decrypted = obj2.decrypt(ciphertext) 
 
 
 if __name__ == "__main__":
-	text = "ATTACKONCIPHERNOTGOOD"
+	text = "QWERR ab 23 @" 
+	second = text
+	result = ""
 	s = 4 
-	print "the original text is "+ text
-	encryptedceasor = ceasorencrypt(text,s)
-	print "Encrypted Cipher: after Ceasor  " + ceasorencrypt(text,s)
-	#callvigenere(encryptedceasor, keyword)
-	encryptedtext , key  = callvigenere(encryptedceasor, "HELLO")
-	#print "The Encrypted text is  :"+ encryptedtext
-	decryptedvigenere = originalText(encryptedtext , key)	
-	originaltext = decryptceasor(decryptedvigenere , s)
-	print (originaltext)
+	l = len(text)
+	required = 17-l 
+	if l < 16:
+		for i in range(l+1, 17 ): 
+			text  = text  + "@"
+		print "the complete text " + text
+	 	encryptedceasor = ceasorencrypt(text,s)
+	 	print "Encrypted Cipher after Ceasor  " + encryptedceasor
+	 	encryptedaes =  encryptaes(encryptedceasor)
+	 	decryptedaes  = decryptaes (encryptedaes)
+	 	originaltext = decryptceasor(decryptedaes , s)	
+	 	print originaltext
+		original = ""
+	for i in range(0,l): 
+		original =  original + originaltext[i] 
+	print "original text is " + original
+
+	
 
 
